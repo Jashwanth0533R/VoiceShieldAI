@@ -5,10 +5,14 @@ import os
 from audio.preprocessing import preprocess_audio
 from audio.features import extract_acoustic_features
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(BASE_DIR, "models", "logistic_regression_detector.pkl")
-SCALER_PATH = Path(r".\models\logistic_regression_scaler.pkl")
+
+MODEL_PATH = os.path.join(
+    BASE_DIR, "models", "logistic_regression_detector.pkl"
+)
+SCALER_PATH = os.path.join(
+    BASE_DIR, "models", "logistic_regression_scaler.pkl"
+)
 
 
 # --------------------------------------------------
