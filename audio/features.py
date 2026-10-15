@@ -112,31 +112,53 @@ def extract_acoustic_features(audio_path):
     # ==================================================
 
     
+    
     # Fundamental frequency / Pitch
-    f0, voiced_flag, voiced_prob = librosa.pyin(
-        waveform,
-        fmin=librosa.note_to_hz("C2"),
-        fmax=librosa.note_to_hz("C7"),
-        sr=sr,
-        frame_length=1024,
-        hop_length=512,
-        max_transition_rate=20.0,
-        resolution=0.1
-    )
+    # Lightweight autocorrelation-based pitch estimate
+    frame_length = 2048
+    hop_length = 512
 
-    # Keep only valid voiced pitch values
-    valid_f0 = f0[~np.isnan(f0)]
+    pitches = []
 
-    # Handle audio with no detectable pitch
+    for start in range(0, len(waveform) - frame_length + 1, hop_length):
+        frame = waveform[start:start + frame_length]
+        frame = frame - np.mean(frame)
+
+        energy = np.dot(frame, frame)
+        if energy < 1e-8:
+            continue
+
+        correlation = np.correlate(frame, frame, mode="full")
+        correlation = correlation[len(frame) - 1:]
+
+        min_lag = max(1, int(sr / librosa.note_to_hz("C7")))
+        max_lag = min(
+            int(sr / librosa.note_to_hz("C2")),
+            len(correlation) - 1
+        )
+
+        if min_lag >= max_lag:
+            continue
+
+        lag = min_lag + np.argmax(correlation[min_lag:max_lag + 1])
+        pitch = sr / lag
+
+        if librosa.note_to_hz("C2") <= pitch <= librosa.note_to_hz("C7"):
+            pitches.append(pitch)
+
+    valid_f0 = np.asarray(pitches, dtype=np.float32)
+
     if len(valid_f0) > 0:
         pitch_mean = np.mean(valid_f0)
         pitch_std = np.std(valid_f0)
+        voiced_ratio = len(valid_f0) / max(
+            1, (len(waveform) - frame_length) // hop_length + 1
+        )
     else:
         pitch_mean = 0.0
         pitch_std = 0.0
+        voiced_ratio = 0.0
 
-    # Percentage of frames classified as voiced
-    voiced_ratio = np.mean(voiced_flag)
 
 
     # ==================================================
