@@ -94,14 +94,14 @@ def analyze():
         return jsonify(response), 200
 
     except FileNotFoundError as e:
-    import traceback
-    traceback.print_exc()
-    print(f"FileNotFoundError: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
+        print(f"FileNotFoundError: {e}", flush=True)
 
-    return error_response(
-        "Audio file could not be processed",
-        400
-    )
+        return error_response(
+            "Audio file could not be processed",
+            400
+        )
 
     except Exception as e:
         import traceback
