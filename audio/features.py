@@ -111,12 +111,17 @@ def extract_acoustic_features(audio_path):
     # PROSODIC FEATURES
     # ==================================================
 
+    
     # Fundamental frequency / Pitch
     f0, voiced_flag, voiced_prob = librosa.pyin(
         waveform,
         fmin=librosa.note_to_hz("C2"),
         fmax=librosa.note_to_hz("C7"),
-        sr=sr
+        sr=sr,
+        frame_length=1024,
+        hop_length=512,
+        max_transition_rate=20.0,
+        resolution=0.1
     )
 
     # Keep only valid voiced pitch values
@@ -132,6 +137,7 @@ def extract_acoustic_features(audio_path):
 
     # Percentage of frames classified as voiced
     voiced_ratio = np.mean(voiced_flag)
+
 
     # ==================================================
     # CREATE FIXED-LENGTH FEATURE VECTOR
