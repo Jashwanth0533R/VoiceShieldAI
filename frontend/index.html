@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceShield AI</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <div class="logo">
+            <span class="logo-icon"></span>
+            <div class="logo-text">
+                <h1>VoiceShield AI</h1>
+                <span class="badge">SECURITY SYSTEM</span>
+                <p>REAL-TIME VOICE PROTECTION</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-btn active" data-target="overview">Overview</button>
+            <button class="nav-btn" data-target="voice-analysis">Voice Analysis</button>
+            <button class="nav-btn disabled" id="nav-security-report" data-target="security-report">Security Report</button>
+            <button class="nav-btn" data-target="live-protection"><span class="dot"></span> Live Protection</button>
+        </nav>
+        <div class="nav-status">
+            <div class="status-pill blue"><span class="dot"></span> RISK ENGINE READY</div>
+            <div class="status-pill outline">🔒 SYSTEM SECURE</div>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- Landing Page / Overview -->
+        <section id="overview" class="screen active">
+            <div class="hero">
+                <h2>REAL-TIME VOICE SECURITY</h2>
+                <h1 class="hero-title">VoiceShield AI</h1>
+                <p class="hero-tagline">Hear the truth. Stay safe.</p>
+                <p class="hero-desc">Real-time protection against AI voice impersonation and fraud.</p>
+                <button class="btn-primary" id="btn-start-analysis">Analyze a Voice &rarr;</button>
+                <div class="hero-support">
+                    <p>Supports WAV & MP3</p>
+                    <p class="status-active"><span class="dot green"></span> Protection Active</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Voice Analysis Input -->
+        <section id="voice-analysis" class="screen">
+            <div class="header-action">
+                <button class="back-btn" data-target="overview">&larr; Back to Overview</button>
+                <span class="panel-label">SECURITY ANALYSIS PANEL</span>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="page-title">Voice Analysis</h2>
+                <p class="page-subtitle">Analyze a voice recording for authenticity and security risk.</p>
+            </div>
+
+            <div class="panel glass-panel">
+                <div class="panel-tabs">
+                    <button class="tab-btn active"><span class="icon">☁</span> Upload Audio</button>
+                    <button class="tab-btn disabled" title="Demo mode only"><span class="icon">🎤</span> Record / Live Input</button>
+                </div>
+                
+                <div class="upload-area" id="drop-zone">
+                    <input type="file" id="audio-file" accept="audio/*" hidden>
+                    <div class="upload-icon">☁</div>
+                    <h3>Drop your audio here</h3>
+                    <p>or <span class="click-text" id="browse-btn">click to browse</span></p>
+                    <div id="file-info" class="hidden">
+                        <span id="file-name"></span>
+                        <button id="remove-file" class="btn-text">Remove</button>
+                    </div>
+                </div>
+
+                <div class="context-section">
+                    <div class="context-header" id="toggle-context">
+                        <div class="context-title">
+                            <span class="icon">🎛</span> 
+                            <h3>Call Context & Threat Intel</h3>
+                            <span class="badge-optional">OPTIONAL</span>
+                        </div>
+                        <button class="expand-btn">Expand Parameters &or;</button>
+                    </div>
+                    
+                    <div class="context-body" id="context-form">
+                        <p class="context-desc">Specify contextual transaction parameters to evaluate multi-factor call threat risk alongside acoustic spectral biometric analysis.</p>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="caller_id">CALLER ID</label>
+                                <input type="text" id="caller_id" name="caller_id" placeholder="e.g. +1 (800) 555-0199">
+                            </div>
+                            <div class="form-group">
+                                <label for="caller_type">CALLER TYPE</label>
+                                <select id="caller_type" name="caller_type">
+                                    <option value="unknown">Unknown</option>
+                                    <option value="internal">Internal</option>
+                                    <option value="external">External</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="claimed_identity">CLAIMED IDENTITY</label>
+                                <input type="text" id="claimed_identity" name="claimed_identity" placeholder="e.g. Executive Officer">
+                            </div>
+                            <div class="form-group">
+                                <label for="transaction_amount">TRANSACTION AMOUNT (₹)</label>
+                                <input type="number" id="transaction_amount" name="transaction_amount" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="urgency">URGENCY</label>
+                                <select id="urgency" name="urgency">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-checkboxes">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="transaction_requested" name="transaction_requested">
+                                <span class="checkbox-custom"></span>
+                                Financial Wire / Transaction Requested
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="sensitive_information_requested" name="sensitive_information_requested">
+                                <span class="checkbox-custom"></span>
+                                Sensitive Credentials or OTP Solicited
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-footer">
+                    <div class="secure-notice">🔒 Secure voice analysis <span class="dim">Audio is processed for security analysis.</span></div>
+                </div>
+            </div>
+            
+            <button class="btn-primary w-100 disabled" id="btn-analyze">Analyze Voice &rarr;</button>
+        </section>
+
+        <!-- Processing Screen -->
+        <section id="processing-screen" class="screen text-center">
+            <h2 class="processing-title">ANALYZING VOICE...</h2>
+            <div class="waveform-animation" id="loading-waveform">
+                <!-- Bars will be generated by JS -->
+            </div>
+            <div class="processing-steps">
+                <div class="step done">✓ Audio received</div>
+                <div class="step done">✓ Voice Activity Detection</div>
+                <div class="step active" id="proc-step-3">&rarr; Voice analysis</div>
+                <div class="step" id="proc-step-4">Risk assessment</div>
+                <div class="step" id="proc-step-5">Security recommendation</div>
+            </div>
+            <div id="processing-error" class="error-msg hidden"></div>
+            <button class="btn-text hidden" id="btn-cancel-processing" data-target="voice-analysis">Cancel</button>
+        </section>
+
+        <!-- Result Dashboard -->
+        <section id="security-report" class="screen">
+            <div class="header-action">
+                <button class="back-btn" data-target="voice-analysis">&larr; Analyze Another Voice</button>
+                
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div class="analysis-mode-badge" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan); border: 1px solid rgba(6,182,212,0.3); padding: 4px 10px; border-radius: 4px; background: rgba(6,182,212,0.1);">
+                        ● ANALYSIS MODE: LIVE AUDIO
+                    </div>
+
+                    <div class="demo-preset" style="font-size: 0.75rem; opacity: 0.7; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px;">
+                        <span>Demo/Simulation:</span>
+                        <button class="preset-btn active" data-preset="genuine">Genuine</button>
+                        <button class="preset-btn" data-preset="spoof">Deepfake Spoof</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel result-panel risk-low" id="report-container">
+                
+                <!-- Main Header & Hero Score -->
+                <div class="report-header hero-layout">
+                    <div class="report-title-area">
+                        <div class="report-label">SECURITY INTELLIGENCE REPORT</div>
+                        <h2 class="report-main-title" id="res-title">✓ GENUINE VOICE VERIFIED</h2>
+                        
+                        <div class="analysis-grid hero-analysis-grid">
+                            <div class="analysis-box">
+                                <div class="box-label">VOICE ANALYSIS</div>
+                                <div class="box-row"><span class="val highlight" id="res-classification">Genuine</span></div>
+                                <div class="box-row"><span>AI Prob:</span> <span class="val highlight" id="res-ai-prob">0.04%</span></div>
+                            </div>
+                            <div class="analysis-box">
+                                <div class="box-label">DSP CLASSIFICATION</div>
+                                <div class="box-row"><span class="val highlight" id="res-dsp-class">Bonafide</span></div>
+                                <div class="box-row"><span>Spoof Prob:</span> <span class="val highlight" id="res-spoof-prob">0.73%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-score-module">
+                        <div class="hero-score-label">TOTAL RISK SCORE</div>
+                        <div class="hero-radial">
+                            <svg viewBox="0 0 180 180" class="hero-svg">
+                                <circle class="hero-bg" cx="90" cy="90" r="82"></circle>
+                                <circle class="hero-progress" id="hero-progress-ring" cx="90" cy="90" r="82" style="stroke-dashoffset: 515.22"></circle>
+                            </svg>
+                            <div class="hero-score-value">
+                                <span id="res-score">0.0</span>
+                                <span class="score-max">/100</span>
+                            </div>
+                        </div>
+                        <div class="risk-badge" id="res-level">LOW RISK</div>
+                    </div>
+                </div>
+
+                <!-- Risk Breakdown Radial Modules -->
+                <div class="risk-factors-section">
+                    <div class="box-label">RISK BREAKDOWN</div>
+                    <div class="factors-grid radial-factors-grid">
+                        <div class="factor-module">
+                            <div class="factor-name">VOICE</div>
+                            <div class="semi-radial">
+                                <svg viewBox="0 0 100 50">
+                                    <path class="semi-bg" d="M 10 50 A 40 40 0 0 1 90 50" />
+                                    <path class="semi-progress" id="semi-voice-risk" d="M 10 50 A 40 40 0 0 1 90 50" style="stroke-dasharray: 125.6; stroke-dashoffset: 125.6;" />
+                                </svg>
+                                <div class="semi-value" id="val-voice-risk">0.0</div>
+                            </div>
+                        </div>
+                        <div class="factor-module">
+                            <div class="factor-name">CALLER</div>
+                            <div class="semi-radial">
+                                <svg viewBox="0 0 100 50">
+                                    <path class="semi-bg" d="M 10 50 A 40 40 0 0 1 90 50" />
+                                    <path class="semi-progress" id="semi-caller-risk" d="M 10 50 A 40 40 0 0 1 90 50" style="stroke-dasharray: 125.6; stroke-dashoffset: 125.6;" />
+                                </svg>
+                                <div class="semi-value" id="val-caller-risk">10.0</div>
+                            </div>
+                        </div>
+                        <div class="factor-module">
+                            <div class="factor-name">TRANSACTION</div>
+                            <div class="semi-radial">
+                                <svg viewBox="0 0 100 50">
+                                    <path class="semi-bg" d="M 10 50 A 40 40 0 0 1 90 50" />
+                                    <path class="semi-progress" id="semi-transaction-risk" d="M 10 50 A 40 40 0 0 1 90 50" style="stroke-dasharray: 125.6; stroke-dashoffset: 125.6;" />
+                                </svg>
+                                <div class="semi-value" id="val-transaction-risk">0.0</div>
+                            </div>
+                        </div>
+                        <div class="factor-module">
+                            <div class="factor-name">CONTEXT</div>
+                            <div class="semi-radial">
+                                <svg viewBox="0 0 100 50">
+                                    <path class="semi-bg" d="M 10 50 A 40 40 0 0 1 90 50" />
+                                    <path class="semi-progress" id="semi-context-risk" d="M 10 50 A 40 40 0 0 1 90 50" style="stroke-dasharray: 125.6; stroke-dashoffset: 125.6;" />
+                                </svg>
+                                <div class="semi-value" id="val-context-risk">0.0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Console Decision & Explanations -->
+                <div class="decision-console">
+                    <div class="explanation-console">
+                        <div class="box-label highlight-label">WHY IS THIS FLAGGED?</div>
+                        <div class="console-events" id="res-explanation">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <div class="recommendation-panel" id="res-rec-container">
+                        <div class="rec-label">SECURITY DECISION</div>
+                        <div class="rec-action-hero" id="res-rec-action">✓ ALLOW</div>
+                    </div>
+                </div>
+                
+                <!-- Technical Intelligence Panel -->
+                <div class="technical-intelligence">
+                    <div class="tech-panel-header-wrapper">
+                        <button class="tech-toggle-btn" id="btn-toggle-tech">
+                            <div class="tech-btn-titles">
+                                <div class="tech-header-main">TECHNICAL INTELLIGENCE</div>
+                                <div class="tech-header-sub">VOICE FORENSICS // MODEL TELEMETRY // RISK SIGNALS</div>
+                            </div>
+                            <div class="tech-live-indicator">● ANALYSIS DATA LIVE</div>
+                            <span class="tech-caret">&or;</span>
+                        </button>
+                        <div class="info-icon tooltip-container" data-tooltip="Technical Intelligence&#10;&#10;This section shows the audio measurements and model information used during voice analysis.&#10;&#10;Higher or lower values do not automatically mean the voice is genuine or synthetic.&#10;&#10;The final security decision comes from the combined voice and contextual risk analysis.">
+                            <span class="info-icon-btn">ⓘ HOW TO READ</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-content hidden" id="tech-panel">
+                        <!-- Analysis Complete Telemetry -->
+                        <div class="analysis-complete-telemetry">
+                            ANALYSIS COMPLETE &nbsp;&mdash;&nbsp; VOICE &rarr; DSP &rarr; MODELS &rarr; RISK ENGINE
+                        </div>
+
+                        <!-- Live Analysis Timeline (Hidden to remove vertical gap) -->
+                        <div class="tech-section" id="sec-analysis-timeline" style="display: none;">
+                            <div class="timeline-pipeline">
+                                <div class="pipeline-node active pulse">● AUDIO INGESTION</div>
+                                <div class="pipeline-arrow">&darr;</div>
+                                <div class="pipeline-node active pulse">● PREPROCESSING</div>
+                                <div class="pipeline-arrow">&darr;</div>
+                                <div class="pipeline-node active pulse">● DSP EXTRACTION</div>
+                                <div class="pipeline-arrow">&darr;</div>
+                                <div class="pipeline-node active pulse">● MODEL 1 ANALYSIS</div>
+                                <div class="pipeline-arrow">&darr;</div>
+                                <div class="pipeline-node active pulse">● MODEL 2 ANALYSIS</div>
+                                <div class="pipeline-arrow">&darr;</div>
+                                <div class="pipeline-node active pulse">● RISK ENGINE</div>
+                                <div class="pipeline-arrow">&darr;</div>
+                                <div class="pipeline-node final">● SECURITY DECISION</div>
+                            </div>
+                        </div>
+
+                        <!-- Model Evaluation -->
+                        <div class="tech-section" id="sec-model-eval">
+                            <div class="tech-section-header">MODEL EVALUATION</div>
+                            <div class="model-status-strip">
+                                <div class="status-item">● MODEL 1 READY</div>
+                                <div class="status-item">● MODEL 2 READY</div>
+                                <div class="status-item highlight">● DUAL MODEL ANALYSIS</div>
+                            </div>
+                            <div class="tech-grid model-eval-grid-vertical">
+                                <!-- Model 1 -->
+                                <div class="tech-card full-width">
+                                    <div class="tech-card-title">MODEL 1</div>
+                                    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; margin-bottom: 25px; line-height: 1.6;">
+                                        <div style="color: var(--risk-low); font-weight: bold; margin-bottom: 5px;">SVM</div>
+                                        <div>RBF Kernel</div>
+                                        <div>C = 10</div>
+                                        <div>Gamma = scale</div>
+                                        <div>Class Weight = balanced</div>
+                                    </div>
+                                    <div class="metrics-row" id="metrics-svm">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+                                <div style="text-align:center; font-size:1.5rem; color:var(--text-muted);">&darr;</div>
+                                <!-- Model 2 -->
+                                <div class="tech-card full-width">
+                                    <div class="tech-card-title">MODEL 2 &mdash; LOGISTIC REGRESSION</div>
+                                    <div class="metrics-row" id="metrics-logreg">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DSP / Acoustic Analysis -->
+                        <div class="tech-section hidden" id="sec-dsp-analysis">
+                            <div class="tech-section-header">DSP / ACOUSTIC ANALYSIS</div>
+                            <div class="tech-grid dsp-grid" id="dsp-container">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Audio Signal -->
+                        <div class="tech-section hidden" id="sec-audio-signal">
+                            <div class="tech-section-header">AUDIO SIGNAL</div>
+                            <div class="audio-waveform-decorative">
+                                <div class="wf-time">0s</div>
+                                <div class="wf-bars">
+                                    <div class="wf-bar" style="height: 20%"></div><div class="wf-bar" style="height: 50%"></div><div class="wf-bar" style="height: 80%"></div><div class="wf-bar" style="height: 40%"></div><div class="wf-bar" style="height: 90%"></div><div class="wf-bar" style="height: 60%"></div><div class="wf-bar" style="height: 30%"></div><div class="wf-bar" style="height: 70%"></div><div class="wf-bar" style="height: 100%"></div><div class="wf-bar" style="height: 50%"></div><div class="wf-bar" style="height: 80%"></div><div class="wf-bar" style="height: 20%"></div><div class="wf-bar" style="height: 60%"></div><div class="wf-bar" style="height: 90%"></div><div class="wf-bar" style="height: 40%"></div><div class="wf-bar" style="height: 70%"></div><div class="wf-bar" style="height: 100%"></div><div class="wf-bar" style="height: 30%"></div>
+                                </div>
+                                <div class="wf-time" id="wf-duration-label">DURATION</div>
+                            </div>
+                            <div class="tech-grid" id="audio-container">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Pause / Speech Analysis -->
+                        <div class="tech-section hidden" id="sec-pause-analysis">
+                            <div class="tech-section-header">PAUSE / SPEECH ANALYSIS</div>
+                            <div class="pause-speech-visual">
+                                <div class="ps-timeline">
+                                    <div class="ps-speech-bar" id="ps-speech-bar" style="width: 85%"></div>
+                                    <div class="ps-silence-bar" id="ps-silence-bar" style="width: 15%"></div>
+                                </div>
+                                <div class="ps-labels">
+                                    <div class="ps-label">SPEECH RATIO <span class="highlight" id="ps-val-speech">85.00%</span></div>
+                                    <div class="ps-label">SILENCE RATIO <span class="dim" id="ps-val-silence">15.00%</span></div>
+                                </div>
+                            </div>
+                            <div class="tech-grid" id="pause-container">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Full Feature Vector -->
+                        <div class="tech-section hidden" id="sec-feature-vector">
+                            <details class="feature-vector-details">
+                                <summary>FULL FEATURE VECTOR (53)</summary>
+                                <div class="feature-vector-content" id="feature-vector-content">
+                                    <!-- Populated dynamically by JavaScript -->
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Protection Screen -->
+        <section id="live-protection" class="screen">
+            <div class="header-action">
+                <button class="back-btn" data-target="overview">&larr; Back to Overview</button>
+                <div class="demo-preset">
+                    <span>Simulation Type:</span>
+                    <button class="preset-btn active" id="btn-live-safe">Safe Call</button>
+                    <button class="preset-btn" id="btn-live-fraud">Deepfake Wire Fraud</button>
+                </div>
+            </div>
+            
+            <div class="live-grid">
+                <div class="glass-panel live-main">
+                    <div class="live-header">
+                        <div class="status-pill red"><span class="dot pulse"></span> LIVE PROTECTION STREAM</div>
+                        <div class="demo-label">SIMULATED DEMO STATE</div>
+                    </div>
+                    
+                    <h2 class="page-title">Active Call Inspection</h2>
+                    <p class="live-caller">Caller: +1 (800) 555-0199 &bull; Inbound VoIP</p>
+                    
+                    <div class="live-waveform" id="live-waveform-bars">
+                        <!-- Animated lines -->
+                    </div>
+                    
+                    <div class="live-status-bar">
+                        <div class="live-active-msg">⚡ Real-time voice stream buffer active</div>
+                        <div class="live-timer" id="live-timer">Active 00:00</div>
+                    </div>
+                    
+                    <div class="live-metrics">
+                        <div class="metric">
+                            <div class="label">AI PROBABILITY</div>
+                            <div class="value" id="live-ai-prob">--</div>
+                        </div>
+                        <div class="metric highlight-metric">
+                            <div class="label">RISK SCORE</div>
+                            <div class="value"><span id="live-score">--</span><span class="sub">/100</span></div>
+                        </div>
+                        <div class="metric">
+                            <div class="label">RISK LEVEL</div>
+                            <div class="value green-text" id="live-level">--</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-panel live-sidebar">
+                    <div class="sidebar-header">
+                        <h3>EVENT TIMELINE</h3>
+                        <span id="timeline-counter">0 OF 7</span>
+                    </div>
+                    <ul class="timeline" id="live-timeline">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- AI Robot (Global) -->
+    <div id="ai-robot" class="robot">
+        <div class="robot-head">
+            <div class="eyes">
+                <div class="eye"></div>
+                <div class="eye"></div>
+            </div>
+        </div>
+        <div class="robot-label">SENTINEL AI</div>
+        <div class="robot-msg" id="robot-msg">Ready when you are.</div>
+    </div>
+
+    <!-- Footer Details -->
+    <footer class="app-footer">
+        <div class="footer-left">VoiceShield AI &copy; 2026 // Intelligent Voice Security System</div>
+        <div class="footer-right">Real-Time Analysis &bull; Risk-Based Security &bull; Explainable Results</div>
+    </footer>
+
+    <!-- Configuration Modal (Hidden) -->
+    <div id="config-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <h3>System Configuration</h3>
+            <div class="form-group">
+                <label>Backend API URL</label>
+                <input type="text" id="config-api-url" value="http://127.0.0.1:5000">
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="config-mock-mode" checked>
+                    <span class="checkbox-custom"></span>
+                    Enable Mock/Demo Mode (Offline)
+                </label>
+            </div>
+            <button class="btn-primary" id="btn-save-config">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- Global Tooltip for dynamic positioning -->
+    <div id="global-tooltip" class="global-tooltip"></div>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    
+</body>
+</html>

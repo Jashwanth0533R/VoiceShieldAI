@@ -1,0 +1,8 @@
+{
+    "classification": "synthetic",
+    "ai_probability": 0.91,
+    "human_probability": 0.09,
+    "acoustic_score": 0.83,
+    "spectral_score": 0.89,
+    "prosody_score": 0.76
+}

@@ -1,0 +1,26 @@
+﻿# Python environment and cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+
+# User uploads and test datasets/audio
+uploads/
+test data/
+dataset/
+datasets/
+
+# Large demo video files
+DEMO VIDEO/
+
+# Logs and temporary files
+*.log
+.DS_Store
+Thumbs.db

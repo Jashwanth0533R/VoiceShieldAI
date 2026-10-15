@@ -1,0 +1,32 @@
+[
+    {
+        "name": "normal_request",
+        "caller_id": "user_001",
+        "caller_type": "known",
+        "claimed_identity": "friend",
+        "transaction_requested": false,
+        "transaction_amount": 0,
+        "urgency": "low",
+        "sensitive_information_requested": false
+    },
+    {
+        "name": "suspicious_request",
+        "caller_id": "unknown",
+        "caller_type": "unknown",
+        "claimed_identity": "CEO",
+        "transaction_requested": true,
+        "transaction_amount": 500000,
+        "urgency": "high",
+        "sensitive_information_requested": false
+    },
+    {
+        "name": "otp_request",
+        "caller_id": "unknown",
+        "caller_type": "unknown",
+        "claimed_identity": "bank_employee",
+        "transaction_requested": false,
+        "transaction_amount": 0,
+        "urgency": "high",
+        "sensitive_information_requested": true
+    }
+]
